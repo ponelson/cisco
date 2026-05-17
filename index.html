@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cisco Product Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1c;
+    --bg-elev: #131a2c;
+    --bg-elev-2: #1a2238;
+    --border: #1f2940;
+    --border-strong: #2d3a5a;
+    --text: #e6edf3;
+    --text-dim: #8b96a8;
+    --text-faint: #5a6378;
+    --accent: #22d3ee;
+    --accent-glow: rgba(34, 211, 238, 0.15);
+    --warm: #fbbf24;
+    --rose: #fb7185;
+    --violet: #a78bfa;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --sky: #38bdf8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(34, 211, 238, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 80% 100%, rgba(167, 139, 250, 0.05) 0%, transparent 40%),
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 80px 80px, 80px 80px;
+    background-position: 0 0, 0 0, -1px -1px, -1px -1px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, var(--bg) 100%);
+    pointer-events: none;
+    opacity: 0.4;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Header ===== */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 32px;
+  }
+
+  .brand-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-mark::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-variation-settings: "opsz" 144;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    max-width: 56ch;
+    line-height: 1.6;
+  }
+
+  .meta-block {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-block .count {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ===== Controls ===== */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .search-wrap {
+    position: relative;
+  }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    font-size: 18px;
+  }
+
+  input[type="search"] {
+    width: 100%;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 14px 16px 14px 44px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  input[type="search"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-elev-2);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+
+  input[type="search"]::placeholder { color: var(--text-faint); }
+
+  .filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pill:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .pill.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--bg);
+  }
+
+  .pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .pill .num {
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  /* ===== Grid ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .card {
+    background: var(--bg);
+    padding: 24px;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card:hover {
+    background: var(--bg-elev);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--cat-color, var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .card:hover::before { transform: scaleX(1); }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .card-cat {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cat-color, var(--accent));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-cat::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+
+  .card-id {
+    font-size: 10px;
+    color: var(--text-faint);
+  }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    font-variation-settings: "opsz" 24;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .tag {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    padding: 80px 24px;
+    text-align: center;
+    color: var(--text-faint);
+    background: var(--bg);
+  }
+
+  .empty .ascii {
+    font-size: 11px;
+    line-height: 1.3;
+    white-space: pre;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  /* ===== Modal ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 16, 0.85);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -48%);
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    width: min(680px, calc(100vw - 32px));
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.25s;
+    z-index: 101;
+  }
+
+  .modal.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  .modal-header {
+    padding: 28px 32px 24px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .modal-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--cat-color, var(--accent));
+  }
+
+  .modal-cat {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cat-color, var(--accent));
+    margin-bottom: 10px;
+  }
+
+  .modal-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 36px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+
+  .modal-tagline {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .close-btn:hover {
+    color: var(--text);
+    border-color: var(--text);
+  }
+
+  .modal-body {
+    padding: 28px 32px 32px;
+  }
+
+  .modal-section {
+    margin-bottom: 24px;
+  }
+
+  .modal-section:last-child { margin-bottom: 0; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modal-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .product-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+
+  .product-list li {
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .use-cases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .use-cases .tag {
+    color: var(--text-dim);
+    border-color: var(--border-strong);
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-faint);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 720px) {
+    .container { padding: 32px 20px 60px; }
+    header { grid-template-columns: 1fr; }
+    .meta-block { text-align: left; }
+    .meta-block .count { font-size: 40px; }
+    h1 { font-size: 48px; }
+    .grid { grid-template-columns: 1fr; }
+    .modal-name { font-size: 28px; }
+    .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
+  }
+
+  /* Stagger animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    animation: fadeUp 0.4s ease-out backwards;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div>
+      <div class="brand-mark">Cisco Systems — Product Atlas / v1.0</div>
+      <h1>The Cisco<br><em>Portfolio</em>, mapped.</h1>
+      <p class="subtitle">An interactive index of Cisco's product universe — from data-center compute to cloud-managed networking, from collaboration to threat intelligence. Click any product to see details.</p>
+    </div>
+    <div class="meta-block">
+      <span class="count" id="count">—</span>
+      <span>products indexed</span><br>
+      <span id="cat-count">— categories</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <input type="search" id="search" placeholder="search products, technologies, use cases…" autocomplete="off">
+    </div>
+    <div class="filter-pills" id="filters"></div>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    <span>An independent reference. Not affiliated with Cisco Systems.</span>
+    <span id="result-info"></span>
+  </footer>
+
+</div>
+
+<div class="modal-backdrop" id="backdrop"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-header">
+    <button class="close-btn" id="close" aria-label="Close">✕</button>
+    <div class="modal-cat" id="m-cat"></div>
+    <h2 class="modal-name" id="m-name"></h2>
+    <p class="modal-tagline" id="m-tag"></p>
+  </div>
+  <div class="modal-body">
+    <div class="modal-section">
+      <div class="section-label">Overview</div>
+      <p class="modal-desc" id="m-desc"></p>
+    </div>
+    <div class="modal-section" id="m-products-wrap">
+      <div class="section-label">Key Products / Models</div>
+      <ul class="product-list" id="m-products"></ul>
+    </div>
+    <div class="modal-section" id="m-use-wrap">
+      <div class="section-label">Typical Use Cases</div>
+      <div class="use-cases" id="m-use"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = {
+  compute:        { label: 'Compute & Data Center', color: '#22d3ee' },
+  edge:           { label: 'Edge & Industrial',     color: '#fbbf24' },
+  dc_network:     { label: 'Data Center Network',   color: '#38bdf8' },
+  enterprise_net: { label: 'Enterprise Network',    color: '#a78bfa' },
+  meraki:         { label: 'Cloud-Managed (Meraki)',color: '#34d399' },
+  security:       { label: 'Security',              color: '#fb7185' },
+  collaboration:  { label: 'Collaboration',         color: '#f472b6' },
+  observability:  { label: 'Observability & Mgmt',  color: '#facc15' },
+};
+
+const PRODUCTS = [
+  // ===== Compute =====
+  { cat:'compute', name:'Cisco UCS X-Series', tag:'Modular blade chassis for AI & data-intensive workloads',
+    desc:'A modern modular system — chassis, fabric, and compute nodes managed as a single fabric. Designed for converged AI/ML, virtualization, and database workloads at exabyte scale.',
+    products:['UCS X9508 Chassis','UCS X210c M8 Compute','UCS X410c M7','UCS X440p PCIe Node'],
+    use:['AI training','VDI','SAP HANA','Splunk data lakes'] },
+  { cat:'compute', name:'Cisco UCS C-Series', tag:'General-purpose rack servers (M7/M8 generations)',
+    desc:'Standalone 1U/2U/4U rack servers with industry-standard form factors. The workhorse of Cisco compute — used everywhere from edge sites to hyperscale-style data centers.',
+    products:['C220 M8','C240 M8','C225 M8','C245 M8','C885A M8 (AI server)'],
+    use:['Virtualization','AI inference','HCI nodes','GPU acceleration'] },
+  { cat:'compute', name:'Cisco UCS B-Series', tag:'Classic blade server platform',
+    desc:'The original UCS blade architecture. Still widely deployed in enterprise data centers, paired with UCS 5108 chassis and Fabric Interconnects.',
+    products:['UCS 5108 Chassis','B200 M6 Blade','Fabric Interconnect 6536'],
+    use:['Enterprise virtualization','Private cloud','Legacy migration'] },
+  { cat:'compute', name:'Cisco AI Pods', tag:'Pre-validated AI infrastructure stacks',
+    desc:'Turnkey AI infrastructure combining UCS compute, NVIDIA GPUs, Nexus networking, and validated software. Designed for rapid deployment of generative-AI and inference workloads.',
+    products:['AI Pod for Inferencing','AI Pod for RAG','NVIDIA HGX systems','Lenovo/Cisco co-engineered pods'],
+    use:['LLM inference','RAG pipelines','Computer vision','Model fine-tuning'] },
+  { cat:'compute', name:'Cisco HyperFlex', tag:'Hyperconverged infrastructure (sunset path)',
+    desc:'Cisco\'s legacy HCI platform combining compute, storage, and networking. Now in extended-support mode as Cisco partners with Nutanix for next-gen HCI.',
+    products:['HX220c','HX240c','HX Edge'],
+    use:['Branch HCI','VDI','Legacy private cloud'] },
+
+  // ===== Edge =====
+  { cat:'edge', name:'Cisco Unified Edge', tag:'Ruggedized compute for remote locations',
+    desc:'A modular edge platform bringing data-center-class compute, networking, and security to constrained or remote sites. Acts as a local ingestion point and durable write-back cache.',
+    products:['XE9305 Chassis (3U)','XE130c M8 Compute Node'],
+    use:['Retail stores','Naval ships','Test vehicles','Outposts','Local AI inference'] },
+  { cat:'edge', name:'Cisco Catalyst IE Switches', tag:'Industrial Ethernet switching',
+    desc:'Ruggedized switches built for harsh environments — manufacturing floors, substations, transportation systems, and mining operations. DIN-rail and IP67 form factors.',
+    products:['IE3300','IE3400 Heavy Duty','IE9300','IE3105 Rugged'],
+    use:['Factory automation','Smart grid','Rail networks','Outdoor deployments'] },
+  { cat:'edge', name:'Cisco IR Industrial Routers', tag:'Cellular & ruggedized routing',
+    desc:'Industrial-grade routers with 5G/LTE, GPS, and harsh-environment hardening. Used in mobile assets, energy, and field operations.',
+    products:['IR1101','IR1800','IR8140 Heavy Duty','IR8340'],
+    use:['Fleet/transit','Oil & gas','Public safety','Remote infrastructure'] },
+  { cat:'edge', name:'Cisco IoT Control Center', tag:'Connectivity management for IoT devices',
+    desc:'Cloud platform managing the cellular connectivity lifecycle of IoT devices at scale — from SIM provisioning through analytics and billing across global carrier networks.',
+    products:['IoT Control Center SaaS','eSIM management'],
+    use:['Connected vehicles','Asset tracking','Smart meters'] },
+
+  // ===== Data Center Network =====
+  { cat:'dc_network', name:'Cisco Nexus 9000', tag:'Flagship data-center switching',
+    desc:'High-density, low-latency switches forming the spine and leaf of modern data centers. Run in NX-OS standalone or as ACI fabric. Powers everything from enterprise DCs to hyperscalers.',
+    products:['Nexus 9300','Nexus 9500','Nexus 9800','Nexus 9332D-GX2B'],
+    use:['VXLAN fabrics','ACI','AI/ML fabrics','Multi-tenant DC'] },
+  { cat:'dc_network', name:'Cisco Nexus HyperFabric', tag:'Smart switches & telemetry-driven fabric',
+    desc:'Next-gen Nexus offering with deep telemetry, AI-driven observability, and integrated threat response. Designed to be operated as a service.',
+    products:['HyperFabric for AI','HyperFabric for DC','Nexus Smart Switches'],
+    use:['AI fabrics','Zero-touch DC','Real-time anomaly detection'] },
+  { cat:'dc_network', name:'Cisco SiliconOne', tag:'Unified networking silicon for routing & AI',
+    desc:'Cisco\'s purpose-built silicon family powering the highest-bandwidth switching and routing — engineered specifically for AI cluster fabrics and hyperscale backbones.',
+    products:['G200 (51.2 Tbps)','G100','Q-Series','P-Series'],
+    use:['GPU cluster fabrics','Service provider core','AI/ML backends'] },
+  { cat:'dc_network', name:'Cisco ACI', tag:'Application Centric Infrastructure',
+    desc:'Policy-driven SDN fabric for the data center. Decouples application intent from underlying hardware, enabling automated policy enforcement across thousands of endpoints.',
+    products:['APIC Controller','ACI Multi-Site','ACI Anywhere'],
+    use:['Multi-DC fabrics','Microsegmentation','Hybrid cloud networking'] },
+  { cat:'dc_network', name:'Cisco Nexus Dashboard', tag:'Unified DC ops console',
+    desc:'A single pane for operating Nexus and ACI fabrics — including assurance, insights, orchestration, and fabric controllers. Consolidates what used to be multiple separate apps.',
+    products:['Nexus Dashboard Fabric Controller','Insights','Orchestrator'],
+    use:['DC fabric ops','Compliance & assurance','Telemetry analytics'] },
+  { cat:'dc_network', name:'Cisco Optics', tag:'Pluggable transceivers',
+    desc:'A massive portfolio of QSFP, OSFP, and SFP optics spanning 1G to 800G — including pluggable coherent optics that collapse IP and optical layers in service-provider networks.',
+    products:['QSFP-DD 800G','QSFP28 100G','SFP+ 10G','Bright ZR+'],
+    use:['DCI','AI fabric interconnect','Metro/long-haul'] },
+
+  // ===== Enterprise Network =====
+  { cat:'enterprise_net', name:'Cisco Catalyst 9000', tag:'Flagship campus switching',
+    desc:'The dominant campus switching platform — from access (9200/9300) to core/distribution (9500/9600). Programmable, secure, and SD-Access-ready.',
+    products:['Cat 9200','Cat 9300','Cat 9400','Cat 9500','Cat 9600'],
+    use:['Campus access','Distribution & core','SD-Access fabrics','PoE'] },
+  { cat:'enterprise_net', name:'Cisco Catalyst 8000 Routers', tag:'Edge & WAN routing',
+    desc:'The convergence of ISR/ASR into a single Catalyst 8000 family. Runs IOS XE with SD-WAN, segment routing, and integrated security across branch through provider edge.',
+    products:['Cat 8200','Cat 8300','Cat 8500','Cat 8000V'],
+    use:['Branch WAN','SD-WAN edge','Cloud on-ramp','Service provider edge'] },
+  { cat:'enterprise_net', name:'Cisco Catalyst Wireless', tag:'Wi-Fi 6E and Wi-Fi 7 access points',
+    desc:'Enterprise wireless access — from Wi-Fi 6 to the latest Wi-Fi 7 APs — managed via Catalyst Center or Meraki dashboard. Includes 9100/9120/9130/9136/9166 families.',
+    products:['Cat 9166 (Wi-Fi 7)','Cat 9136','Cat 9120','Cat 9800 WLC'],
+    use:['Office Wi-Fi','High-density venues','Outdoor wireless','Location services'] },
+  { cat:'enterprise_net', name:'Cisco Catalyst SD-WAN', tag:'Software-defined WAN (formerly Viptela)',
+    desc:'Centrally orchestrated WAN overlay providing application-aware routing, segmentation, and security across branches, clouds, and SASE points-of-presence.',
+    products:['vManage','vSmart','vBond','cEdge routers'],
+    use:['Branch connectivity','Cloud on-ramp','SASE integration'] },
+  { cat:'enterprise_net', name:'Cisco Catalyst Center', tag:'Network controller (formerly DNA Center)',
+    desc:'Centralized controller for Catalyst infrastructure — handling automation, assurance, SD-Access fabric, and AI-driven analytics across the entire enterprise network.',
+    products:['Catalyst Center appliance','AI Endpoint Analytics','SD-Access'],
+    use:['Network automation','Assurance','Identity-based segmentation'] },
+  { cat:'enterprise_net', name:'Cisco ISE', tag:'Identity Services Engine',
+    desc:'The identity policy plane of the Cisco network — handles 802.1X, profiling, posture, guest access, and TrustSec/SD-Access policy enforcement.',
+    products:['ISE Appliance','ISE-PIC','pxGrid'],
+    use:['NAC','Zero Trust for network','BYOD','Guest access'] },
+  { cat:'enterprise_net', name:'Cisco Crosswork', tag:'Service-provider network automation',
+    desc:'Closed-loop automation suite for service providers — covering network insights, change automation, optimization, and segment-routing path computation.',
+    products:['Crosswork Network Controller','Optimization Engine','Health Insights'],
+    use:['SP automation','SR-MPLS / SRv6','Network optimization'] },
+
+  // ===== Meraki =====
+  { cat:'meraki', name:'Meraki MX', tag:'Cloud-managed security & SD-WAN appliances',
+    desc:'Branch security appliances combining stateful firewall, SD-WAN, content filtering, and IDS/IPS — all managed from the Meraki dashboard.',
+    products:['MX67','MX75','MX85','MX95','MX450'],
+    use:['Branch firewall','SD-WAN','Distributed retail','Remote sites'] },
+  { cat:'meraki', name:'Meraki MS Switches', tag:'Cloud-managed switching',
+    desc:'L2 and L3 switches managed entirely through the Meraki cloud dashboard — from compact access switches to high-throughput aggregation.',
+    products:['MS120','MS225','MS250','MS355','MS425'],
+    use:['Small branch','Distributed enterprise','Education','Retail'] },
+  { cat:'meraki', name:'Meraki MR Access Points', tag:'Cloud-managed wireless',
+    desc:'Wi-Fi 6 and Wi-Fi 7 access points integrated tightly into the Meraki dashboard, with built-in location analytics and air-marshal wireless threat detection.',
+    products:['MR36','MR46','MR57','MR86 (Wi-Fi 7)'],
+    use:['Cloud-managed Wi-Fi','Distributed offices','Retail analytics'] },
+  { cat:'meraki', name:'Meraki MV Cameras', tag:'Smart cloud-managed cameras',
+    desc:'Security cameras with on-device video processing, AI-driven object detection, and zero on-prem NVR — all storage and analytics in the cloud.',
+    products:['MV12','MV22','MV32','MV52','MV72'],
+    use:['Physical security','Occupancy analytics','Retail intelligence'] },
+  { cat:'meraki', name:'Meraki MT Sensors', tag:'IoT environmental sensors',
+    desc:'Wireless sensors for temperature, humidity, water, door state, indoor air quality, and power — surfaced into the Meraki dashboard for alerting and automation.',
+    products:['MT10 (Temp)','MT12 (Water)','MT14 (IAQ)','MT20 (Door)','MT40 (Power)'],
+    use:['Cold-chain monitoring','Server room','Facilities','Healthcare'] },
+  { cat:'meraki', name:'Meraki Systems Manager', tag:'Cloud endpoint management',
+    desc:'MDM/EMM for managing mobile devices, laptops, and desktops — enforcing posture, deploying apps, and integrating with the Meraki network for unified policy.',
+    products:['Systems Manager Enterprise','Trusted Access'],
+    use:['BYOD','Education 1:1','Mobile device security'] },
+
+  // ===== Security =====
+  { cat:'security', name:'Cisco Secure Firewall', tag:'Next-gen firewall (formerly ASA / Firepower)',
+    desc:'The next-generation firewall family — combining stateful inspection, IPS, URL filtering, application control, and TLS decryption. Managed via FMC or cloud-delivered FMC.',
+    products:['Secure Firewall 3100','4200','9300','ASAv','FTDv'],
+    use:['Perimeter firewall','DC east-west','Cloud firewall','VPN concentrator'] },
+  { cat:'security', name:'Cisco Hypershield', tag:'AI-native distributed security fabric',
+    desc:'A new security architecture using eBPF and AI to autonomously segment, patch, and protect workloads across data centers, clouds, and Kubernetes — without traditional perimeters.',
+    products:['Hypershield enforcement points','Hypershield management'],
+    use:['Workload segmentation','Auto-patching','Cloud-native security'] },
+  { cat:'security', name:'Cisco XDR', tag:'Extended detection & response',
+    desc:'Unified SOC platform correlating signals across email, endpoint, network, identity, and cloud — with Talos threat intelligence powering detection and automated response.',
+    products:['XDR Cloud','XDR Investigate','XDR Automate'],
+    use:['SOC operations','Threat hunting','Incident response'] },
+  { cat:'security', name:'Cisco Umbrella', tag:'Cloud-delivered DNS & web security',
+    desc:'DNS-layer security and secure web gateway delivered from the cloud — providing multi-layer threat protection for users on and off the network.',
+    products:['Umbrella DNS','Umbrella SIG','Umbrella for Government'],
+    use:['Remote worker security','Branch web filtering','Phishing protection'] },
+  { cat:'security', name:'Cisco Duo', tag:'Multi-factor auth & zero-trust access',
+    desc:'Identity security and MFA platform — handles strong authentication, device trust, and adaptive access policies across applications.',
+    products:['Duo MFA','Duo Access','Duo Beyond','Passwordless'],
+    use:['MFA everywhere','Zero Trust access','BYOD posture'] },
+  { cat:'security', name:'Cisco Secure Endpoint', tag:'EDR / endpoint protection',
+    desc:'Endpoint detection and response across Windows, Mac, Linux, iOS, and Android — with cloud-based analytics and tight integration into Cisco XDR.',
+    products:['Secure Endpoint Essentials','Advantage','Premier'],
+    use:['EDR','Antimalware','Threat hunting on endpoints'] },
+  { cat:'security', name:'Cisco Secure Access', tag:'Security Service Edge (SSE)',
+    desc:'A unified SSE offering combining SWG, CASB, ZTNA, FWaaS, and DLP — Cisco\'s answer to SASE, delivered through global cloud edge.',
+    products:['Secure Access SSE','ZTNA','CASB','SWG'],
+    use:['SASE','Remote workforce','Cloud app security'] },
+  { cat:'security', name:'Cisco Isovalent', tag:'eBPF networking & security (Cilium/Tetragon)',
+    desc:'Acquired Isovalent — the company behind Cilium and Tetragon. Provides eBPF-based networking, observability, and security for Kubernetes and cloud-native workloads.',
+    products:['Cilium','Tetragon','Isovalent Enterprise','Hybrid Mesh Firewall'],
+    use:['K8s networking','Microservice firewalling','Runtime security'] },
+  { cat:'security', name:'Cisco Talos', tag:'Threat intelligence research',
+    desc:'One of the largest commercial threat-intelligence teams in the world. Feeds every Cisco security product with research, IOCs, vulnerability disclosure, and emergency response.',
+    products:['Talos Intelligence','Talos Incident Response','Snort rules'],
+    use:['Threat intel feeds','Incident response retainer','Detection content'] },
+
+  // ===== Collaboration =====
+  { cat:'collaboration', name:'Webex Suite', tag:'Meetings, messaging, calling unified',
+    desc:'The flagship collaboration platform — combining video meetings, persistent messaging, cloud calling, polling, whiteboarding, and AI assistants in a single app.',
+    products:['Webex Meetings','Webex Messaging','Webex Calling','Webex Polling','Webex AI Assistant'],
+    use:['Hybrid work','Enterprise meetings','Team collaboration'] },
+  { cat:'collaboration', name:'Webex Contact Center', tag:'Cloud contact center (CCaaS)',
+    desc:'Cloud-native contact center platform with omnichannel routing, AI-driven agent assist, conversational IVR, and analytics.',
+    products:['Webex CC','Webex CC AI Agent','Workforce Optimization'],
+    use:['Customer service','Sales contact','AI-augmented agents'] },
+  { cat:'collaboration', name:'Webex Devices', tag:'Hardware for meeting rooms & desks',
+    desc:'Purpose-built endpoints — from personal video desks to room kits and large boardroom systems. AI-powered framing, noise removal, and multi-platform support (Webex/Teams/Zoom).',
+    products:['Desk Pro','Desk Mini','Room Bar','Room Kit Pro','Board Pro'],
+    use:['Conference rooms','Hot-desking','Executive offices','Huddle spaces'] },
+  { cat:'collaboration', name:'Webex Calling', tag:'Cloud PBX',
+    desc:'Enterprise-grade cloud calling service — replaces on-prem PBX with carrier-grade voice delivered globally, with regional PSTN options.',
+    products:['Webex Calling Multi-Tenant','Dedicated Instance','PSTN options'],
+    use:['Cloud PBX migration','Global voice','Unified communications'] },
+
+  // ===== Observability =====
+  { cat:'observability', name:'Splunk', tag:'Security & observability data platform',
+    desc:'Acquired by Cisco for $28B in 2024. Splunk\'s data platform powers SIEM, observability, and IT ops at massive scale — ingesting and analyzing log/metric/trace data.',
+    products:['Splunk Enterprise Security','Splunk Observability Cloud','Splunk SOAR','Splunk ITSI'],
+    use:['SIEM','Observability','Compliance','Fraud detection'] },
+  { cat:'observability', name:'Cisco ThousandEyes', tag:'Internet & cloud network observability',
+    desc:'Synthetic and real-user monitoring of the internet, cloud providers, and SaaS apps. Shows the end-to-end digital experience across networks you don\'t own.',
+    products:['ThousandEyes Cloud','Enterprise Agents','Endpoint Agents','Internet Insights'],
+    use:['SaaS performance','ISP troubleshooting','Cloud connectivity'] },
+  { cat:'observability', name:'Cisco AppDynamics', tag:'Application performance monitoring',
+    desc:'Full-stack APM — traces application transactions across code, databases, and infrastructure, with business-transaction-level correlation and AI-driven anomaly detection.',
+    products:['AppDynamics SaaS','On-Premises','Cisco Cloud Observability'],
+    use:['APM','Business transaction monitoring','Root-cause analysis'] },
+  { cat:'observability', name:'Cisco Intersight', tag:'SaaS fleet management for UCS & edge',
+    desc:'Cloud-based management plane for UCS servers, HyperFlex, and Unified Edge — enabling zero-touch provisioning, policy-driven config, and lifecycle ops at fleet scale.',
+    products:['Intersight Infrastructure Service','Workload Optimizer','Cloud Orchestrator'],
+    use:['DC fleet management','Edge ops','Server lifecycle','Cost optimization'] },
+];
+
+// ===== App =====
+const grid = document.getElementById('grid');
+const filtersEl = document.getElementById('filters');
+const searchEl = document.getElementById('search');
+const countEl = document.getElementById('count');
+const catCountEl = document.getElementById('cat-count');
+const resultInfo = document.getElementById('result-info');
+
+const modal = document.getElementById('modal');
+const backdrop = document.getElementById('backdrop');
+const mCat = document.getElementById('m-cat');
+const mName = document.getElementById('m-name');
+const mTag = document.getElementById('m-tag');
+const mDesc = document.getElementById('m-desc');
+const mProducts = document.getElementById('m-products');
+const mUse = document.getElementById('m-use');
+
+let activeFilter = 'all';
+let query = '';
+
+// Build filters
+function buildFilters() {
+  const counts = {};
+  PRODUCTS.forEach(p => counts[p.cat] = (counts[p.cat] || 0) + 1);
+
+  const html = [`<button class="pill active" data-cat="all">
+    <span class="dot"></span>All <span class="num">${PRODUCTS.length}</span>
+  </button>`];
+
+  Object.entries(CATEGORIES).forEach(([key, c]) => {
+    html.push(`<button class="pill" data-cat="${key}" style="--cat-color:${c.color}">
+      <span class="dot" style="background:${c.color}"></span>${c.label} <span class="num">${counts[key] || 0}</span>
+    </button>`);
+  });
+
+  filtersEl.innerHTML = html.join('');
+  filtersEl.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.cat;
+      filtersEl.querySelectorAll('.pill').forEach(b => b.classList.toggle('active', b === btn));
+      render();
+    });
+  });
+}
+
+function matchesQuery(p, q) {
+  if (!q) return true;
+  q = q.toLowerCase();
+  return p.name.toLowerCase().includes(q)
+      || p.tag.toLowerCase().includes(q)
+      || p.desc.toLowerCase().includes(q)
+      || (p.products || []).some(x => x.toLowerCase().includes(q))
+      || (p.use || []).some(x => x.toLowerCase().includes(q));
+}
+
+function render() {
+  const filtered = PRODUCTS.filter(p =>
+    (activeFilter === 'all' || p.cat === activeFilter) && matchesQuery(p, query)
+  );
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty">
+      <div class="ascii">┌─────────────┐
+│  no result  │
+└─────────────┘</div>
+      <p>No products match "${query}" in ${activeFilter === 'all' ? 'any category' : CATEGORIES[activeFilter].label}.</p>
+    </div>`;
+    resultInfo.textContent = '0 results';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p, i) => {
+    const cat = CATEGORIES[p.cat];
+    return `<article class="card" data-idx="${PRODUCTS.indexOf(p)}" style="--cat-color:${cat.color}; animation-delay:${Math.min(i * 0.025, 0.4)}s">
+      <div>
+        <div class="card-header">
+          <span class="card-cat">${cat.label}</span>
+          <span class="card-id">${String(PRODUCTS.indexOf(p) + 1).padStart(3, '0')}</span>
+        </div>
+        <h3 class="card-name">${p.name}</h3>
+        <p class="card-desc">${p.tag}</p>
+      </div>
+      <div class="card-tags">
+        ${(p.products || []).slice(0, 3).map(x => `<span class="tag">${x}</span>`).join('')}
+        ${(p.products || []).length > 3 ? `<span class="tag">+${p.products.length - 3}</span>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openModal(PRODUCTS[+card.dataset.idx]));
+  });
+
+  resultInfo.textContent = `${filtered.length} result${filtered.length === 1 ? '' : 's'}`;
+}
+
+function openModal(p) {
+  const cat = CATEGORIES[p.cat];
+  modal.style.setProperty('--cat-color', cat.color);
+  mCat.style.color = cat.color;
+  mCat.textContent = cat.label;
+  mName.textContent = p.name;
+  mTag.textContent = p.tag;
+  mDesc.textContent = p.desc;
+
+  if (p.products && p.products.length) {
+    mProducts.innerHTML = p.products.map(x => `<li>${x}</li>`).join('');
+    document.getElementById('m-products-wrap').style.display = '';
+  } else {
+    document.getElementById('m-products-wrap').style.display = 'none';
+  }
+
+  if (p.use && p.use.length) {
+    mUse.innerHTML = p.use.map(x => `<span class="tag">${x}</span>`).join('');
+    document.getElementById('m-use-wrap').style.display = '';
+  } else {
+    document.getElementById('m-use-wrap').style.display = 'none';
+  }
+
+  modal.classList.add('open');
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  backdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('close').addEventListener('click', closeModal);
+backdrop.addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+searchEl.addEventListener('input', e => {
+  query = e.target.value;
+  render();
+});
+
+// Init
+buildFilters();
+countEl.textContent = PRODUCTS.length;
+catCountEl.textContent = Object.keys(CATEGORIES).length + ' categories';
+render();
+</script>
+
+</body>
+</html>
